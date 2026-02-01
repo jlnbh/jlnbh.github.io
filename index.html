@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Veux-tu être ma moitié ? 💖</title>
+<style>
+  :root{
+    --bg: #ffe6f2;
+    --primary: #ff3399;
+    --accent: #ff66b3;
+  }
+
+  body {
+    background-color: var(--bg);
+    font-family: "Comic Sans MS", "Comic Neue", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .stage {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  h1 {
+    color: var(--primary);
+    font-size: 2.4rem;
+    margin: 48px 16px 8px;
+  }
+
+  .hero {
+    width: 130px;
+    height: 130px;
+    margin: 12px auto;
+    display: block;
+  }
+
+  .controls {
+    margin-top: 8px;
+    margin-bottom: 40px;
+  }
+
+  .button {
+    background-color: var(--accent);
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    margin: 12px;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 160ms ease;
+  }
+  .button:hover { transform: scale(1.05); }
+  .button:focus { outline: 3px solid rgba(255,51,153,0.25); }
+
+  #no {
+    position: absolute;
+    left: calc(50% + 80px);
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .heart {
+    position: absolute;
+    top: -80px;
+    font-size: 22px;
+    color: var(--primary);
+    pointer-events: none;
+    animation: fall 5s linear forwards;
+    will-change: transform, opacity;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    80%  { opacity: 1; }
+    100% { transform: translateY(110vh) rotate(180deg); opacity: 0; }
+  }
+
+  #message {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 24px;
+    background: white;
+    padding: 12px 18px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    color: var(--primary);
+    display: none;
+    z-index: 999;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .heart, .button { transition: none; animation: none; }
+  }
+
+  @media (max-width:480px){
+    h1 { font-size: 1.4rem; margin-top: 28px; }
+    .hero { width: 96px; height: 96px; }
+    #no { left: calc(50% + 60px); }
+  }
+
+</style>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <h1>Veux-tu être ma moitié pour la vie ? 💖</h1>
+
+    <svg class="hero" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path fill="#ff66b3" d="M12 21s-7.5-4.9-9.2-8.1C.8 8 5.2 4 8.7 6.2 10 7.1 11 8.8 12 9.6c1-.8 2-2.5 3.3-3.4C18.8 4 23.2 8 21.2 12.9 19.5 16.1 12 21 12 21z"/>
+    </svg>
+
+    <div class="controls" aria-hidden="false">
+      <button class="button" id="yes" aria-label="Réponse Oui">Oui 💖</button>
+      <button class="button" id="no" aria-label="Réponse Non">Non 😢</button>
+    </div>
+
+    <div id="message" role="status" aria-live="polite"></div>
+  </div>
+
+<script>
+  const noBtn = document.getElementById('no');
+  const yesBtn = document.getElementById('yes');
+  const msg = document.getElementById('message');
+
+  function placeNoInitial() {
+    const padding = 12;
+    const x = Math.min(window.innerWidth - noBtn.offsetWidth - padding, Math.max(padding, window.innerWidth * 0.6));
+    const y = Math.min(window.innerHeight - noBtn.offsetHeight - padding, Math.max(120, window.innerHeight * 0.5));
+    noBtn.style.left = x + 'px';
+    noBtn.style.top  = y + 'px';
+    noBtn.style.transform = '';
+  }
+  placeNoInitial();
+  window.addEventListener('resize', placeNoInitial);
+
+  function randomPosition() {
+    const padding = 12;
+    const maxX = Math.max(0, window.innerWidth - noBtn.offsetWidth - padding);
+    const maxY = Math.max(0, window.innerHeight - noBtn.offsetHeight - padding);
+    const x = Math.floor(Math.random() * maxX) + padding;
+    const y = Math.floor(Math.random() * (maxY - 120)) + 120; // éviter toute la zone haute (titre)
+    return { x, y };
+  }
+
+  function moveButton() {
+    const { x, y } = randomPosition();
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+  }
+
+  noBtn.addEventListener('mouseover', moveButton);
+  noBtn.addEventListener('focus', moveButton);
+  noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); }, {passive:false});
+
+  yesBtn.addEventListener('click', () => {
+    msg.textContent = "Ouiiiii! Je suis à toi pour toujours 💖";
+    msg.style.display = 'block';
+    setTimeout(() => { msg.style.display = 'none'; }, 4000);
+  });
+
+  // Cœurs qui tombent — respect de prefers-reduced-motion
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.innerText = '💖';
+    heart.style.left = Math.random() * (window.innerWidth - 24) + 'px';
+    heart.style.fontSize = (18 + Math.random() * 36) + 'px';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 5200);
+  }
+
+  if (!reduceMotion) {
+    setInterval(createHeart, 300);
+  }
+</script>
+</body>
+</html>
