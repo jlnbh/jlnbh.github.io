@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Khadi Queen — Veux-tu être ma moitié ? 💖</title>
+<meta name="description" content="Une petite surprise pour Khadi Queen — dis Oui 💖" />
+<style>
+  :root{
+    --bg-1: #fff7fb;
+    --bg-2: #ffe6f2;
+    --pink-1: #ff6fb5;
+    --pink-2: #ff3b97;
+    --accent: #ff92c6;
+    --muted: #6b6b6b;
+    --card: #fff;
+    --glass: rgba(255,255,255,0.6);
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, -apple-system;
+    background: linear-gradient(160deg,var(--bg-1) 0%, var(--bg-2) 100%);
+    color:#222;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+
+  .wrap{
+    max-width:900px;
+    width:100%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));
+    border-radius:20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    overflow:hidden;
+    position:relative;
+  }
+
+  header{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:22px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,240,250,0.7));
+    border-bottom:1px solid rgba(0,0,0,0.04);
+  }
+  .avatar{
+    width:68px;height:68px;border-radius:16px;
+    background:linear-gradient(135deg,var(--pink-1),var(--pink-2));
+    display:flex;align-items:center;justify-content:center;color:white;font-weight:700;
+    font-size:20px;box-shadow:0 6px 18px rgba(255,105,180,0.12);
+  }
+  header h1{margin:0;font-size:1.2rem}
+  header p{margin:0;color:var(--muted);font-size:0.9rem}
+
+  main{padding:28px; display:grid; grid-template-columns: 1fr 360px; gap:20px; align-items:start;}
+  @media (max-width:820px){ main{grid-template-columns:1fr; padding:20px} .side{order:2} }
+
+  /* Left card */
+  .card{
+    background:var(--card);
+    border-radius:14px;
+    padding:20px;
+    box-shadow: 0 6px 18px rgba(17,17,17,0.04);
+  }
+
+  .hero-title{
+    font-size:1.6rem;
+    margin:0 0 8px 0;
+    color:var(--pink-2);
+  }
+  .lead{ color:var(--muted); margin:0 0 18px 0; }
+
+  .big-heart{
+    display:flex;align-items:center;gap:12px;margin:14px 0;
+  }
+  .big-heart .heart{
+    width:84px;height:84px;border-radius:18px;background:linear-gradient(135deg,var(--pink-1),var(--pink-2));
+    display:flex;align-items:center;justify-content:center;color:white;font-size:34px;box-shadow:0 10px 30px rgba(255,59,151,0.12);
+  }
+
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:8px; }
+  .btn{
+    padding:12px 18px;border-radius:12px;border:none;cursor:pointer;font-weight:600;font-size:1rem;
+    box-shadow:none;
+  }
+
+  .btn-primary{
+    background: linear-gradient(90deg,var(--pink-2), var(--pink-1));
+    color:white;
+    transition: transform .14s ease;
+  }
+  .btn-primary:active{ transform:scale(.98); }
+
+  .btn-quiet{
+    background:transparent;border:2px solid rgba(255,59,151,0.12); color:var(--pink-2);
+  }
+
+  /* playful "non" button that evades */
+  .btn-evade{
+    position:relative;
+    background:transparent;border:2px solid rgba(0,0,0,0.06); color:#444;
+  }
+
+  .side{ display:flex; flex-direction:column; gap:12px; }
+
+  .card.small{ padding:14px; display:flex; flex-direction:column; gap:8px; align-items:stretch; }
+
+  .hint{ font-size:0.9rem;color:var(--muted) }
+
+  /* modal success */
+  .modal{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(0,0,0,0.36); padding:20px; z-index:9999; visibility:hidden; opacity:0; transition:opacity .18s ease;
+  }
+  .modal.open{ visibility:visible; opacity:1; }
+  .modal-card{ background:white;border-radius:14px; padding:20px; max-width:520px; width:100%; text-align:center; }
+  .modal-card h2{ margin:0 0 8px 0; color:var(--pink-2); }
+  .modal-card p{ margin:0 0 16px 0; color:#333; }
+  .modal-card .small{ color:var(--muted); font-size:0.95rem; margin-bottom:12px; }
+
+  /* subtle confetti container */
+  canvas#confetti{ position:fixed; inset:0; pointer-events:none; z-index:9998; }
+
+  /* accessible focus */
+  .btn:focus{ outline: 4px solid rgba(255,111,181,0.18); outline-offset:2px; }
+
+  /* reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; }
+  }
+
+</style>
+</head>
+<body>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <div class="wrap" role="main" aria-labelledby="page-title">
+    <header>
+      <div class="avatar" aria-hidden="true">KQ</div>
+      <div>
+        <h1 id="page-title">Pour Khadi Queen 💕</h1>
+        <p>Un petit cadeau, simple, élégant et plein d'amour — devine quoi ?</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2 class="hero-title">Khadi Queen, veux-tu être ma moitié ?</h2>
+        <p class="lead">J'ai fait ça spécialement pour toi — tout doux, tout rose. Choisis, laisse-toi guider. 💖</p>
+
+        <div class="big-heart" aria-hidden="false">
+          <div class="heart" role="img" aria-label="coeur">💖</div>
+          <div>
+            <p style="margin:0; font-weight:600">Tu comptes beaucoup pour moi.</p>
+            <p class="hint" style="margin-top:6px">Tu as 21 ans — maturité, douceur et beauté. Je veux partager la vie avec toi, simplement.</p>
+          </div>
+        </div>
+
+        <div>
+          <p style="margin:0 0 8px 0; font-weight:600">Choisis une réponse :</p>
+          <div class="actions" role="radiogroup" aria-label="Choix de réponse">
+            <button id="yesBtn" class="btn btn-primary" role="radio" aria-checked="false">Oui, Khadi 💍</button>
+            <button id="sweetBtn" class="btn btn-quiet" aria-pressed="false">Peut-être... dis‑moi pourquoi ?</button>
+            <button id="noBtn" class="btn btn-evade" aria-pressed="false">Non 😢</button>
+          </div>
+        </div>
+
+        <div style="margin-top:18px" class="hint">
+          <strong>Astuce :</strong> si tu hésites, clique sur “Peut-être...” — j'ai préparé une petite surprise.
+        </div>
+      </section>
+
+      <aside class="side">
+        <div class="card small">
+          <strong>Un petit mot</strong>
+          <p class="hint" style="margin:6px 0 0 0">Khadi, tu es incroyable — ton sourire rend tout plus doux. Appuie sur "Oui" et découvre une surprise.</p>
+        </div>
+
+        <div class="card small">
+          <strong>Pourquoi c'est spécial</strong>
+          <p class="hint" style="margin:6px 0 0 0">Conçu juste pour toi : interface rose, animations légères et tout en respectant ton confort.</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- modal -->
+  <div id="successModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-card">
+      <h2 id="modalTitle">Ouiiiii, Khadi Queen ! 💖</h2>
+      <p class="small">Je suis tellement heureux(se). Merci d'avoir dit Oui — voilà un bisou virtuel et un petit bouquet.</p>
+      <div style="margin:14px 0;">
+        <div style="font-size:40px">🌸💐🌸</div>
+      </div>
+      <p style="margin-top:8px">Si tu veux un souvenir, appuie sur « Enregistrer » pour télécharger une carte.</p>
+      <div style="display:flex; gap:8px; justify-content:center; margin-top:12px;">
+        <button id="downloadCard" class="btn btn-primary">Enregistrer la carte</button>
+        <button id="closeModal" class="btn btn-quiet">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Simple confetti (lightweight)
+  (function(){
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = innerWidth;
+    let h = canvas.height = innerHeight;
+    let pieces = [];
+
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function onResize(){ w = canvas.width = innerWidth; h = canvas.height = innerHeight; }
+    addEventListener('resize', onResize);
+
+    function rand(min,max){ return Math.random()*(max-min)+min; }
+
+    const colors = ["#ff6fb5","#ff92c6","#ffd0e8","#ff3b97","#ffd6ee"];
+
+    function createPiece(){
+      return {
+        x: rand(0,w), y: -10,
+        vx: rand(-1.2,1.2), vy: rand(1,3.4),
+        r: rand(6,12), color: colors[Math.floor(rand(0,colors.length))]
+      };
+    }
+
+    function step(){
+      if(reduceMotion) return;
+      ctx.clearRect(0,0,w,h);
+      if(Math.random() < 0.6 && pieces.length < 200){
+        pieces.push(createPiece());
+      }
+      for(let i=pieces.length-1;i>=0;i--){
+        const p = pieces[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.02;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.ellipse(p.x,p.y,p.r,p.r*0.7,0,0,Math.PI*2);
+        ctx.fill();
+        if(p.y > h + 20) pieces.splice(i,1);
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  })();
+
+  // Buttons behavior
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const sweetBtn = document.getElementById('sweetBtn');
+  const modal = document.getElementById('successModal');
+  const closeModal = document.getElementById('closeModal');
+  const downloadCard = document.getElementById('downloadCard');
+
+  // Evasive "Non" button: moves away when hovered/touched
+  function moveAway(el){
+    const pad = 20;
+    const cw = document.documentElement.clientWidth;
+    const ch = document.documentElement.clientHeight;
+    const r = el.getBoundingClientRect();
+    const nx = Math.max(pad, Math.random()*(cw - r.width - pad));
+    const ny = Math.max(pad, Math.random()*(ch - r.height - pad - 100));
+    el.style.transform = `translate(${nx - r.left}px, ${ny - r.top}px)`;
+  }
+
+  noBtn.addEventListener('mouseover', ()=> moveAway(noBtn));
+  noBtn.addEventListener('focus', ()=> moveAway(noBtn));
+  noBtn.addEventListener('click', ()=>{
+    // playful nudge and eventually reveal charm
+    alert("Oh non 😅 Ça veut dire que tu as besoin d'encore plus d'amour. Essaie 'Peut-être...' 😉");
+  });
+
+  // Sweet button reveals a gentle note then focuses on Oui
+  sweetBtn.addEventListener('click', ()=>{
+    sweetBtn.disabled = true;
+    sweetBtn.textContent = "Parce que tu es unique ✨";
+    setTimeout(()=>{
+      sweetBtn.textContent = "Peut-être... dis‑moi pourquoi ?";
+      sweetBtn.disabled = false;
+      // small nudge to Oui
+      yesBtn.focus();
+    }, 1500);
+  });
+
+  // Yes button opens modal and marks checked for accessibility
+  yesBtn.addEventListener('click', ()=>{
+    yesBtn.setAttribute('aria-checked','true');
+    openModal();
+  });
+
+  function openModal(){
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+  }
+  function closeModalFn(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    yesBtn.focus();
+  }
+
+  closeModal.addEventListener('click', closeModalFn);
+  modal.addEventListener('click', (e)=> { if(e.target === modal) closeModalFn(); });
+
+  // Download a simple card (SVG)
+  downloadCard.addEventListener('click', async ()=>{
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="800" height="520">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1">
+            <stop offset="0" stop-color="#fff7fb"/>
+            <stop offset="1" stop-color="#ffe6f2"/>
+          </linearGradient>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#g)"/>
+        <text x="50%" y="28%" font-size="36" text-anchor="middle" fill="#ff3b97" font-family="Inter, sans-serif">Pour Khadi Queen</text>
+        <text x="50%" y="46%" font-size="28" text-anchor="middle" fill="#333" font-family="Inter, sans-serif">Oui, je veux partager la vie avec toi 💖</text>
+        <text x="50%" y="70%" font-size="18" text-anchor="middle" fill="#666" font-family="Inter, sans-serif">Avec tout mon amour —</text>
+      </svg>
+    `;
+    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Khadi-Queen-carte.svg';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  // keyboard accessibility
+  [yesBtn, noBtn, sweetBtn].forEach(b => {
+    b.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); b.click(); }
+    });
+  });
+
+  setTimeout(()=>{ yesBtn.focus(); }, 700);
+
+</script>
+</body>
+</html>
